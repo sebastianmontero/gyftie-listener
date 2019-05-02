@@ -22,13 +22,18 @@ class GyftieListener {
     async orderBookChanges({
         blockNum,
         cursor,
+        irreversible = false,
     }) {
         const interpreter = new ExchangeOrderInterpreter();
 
         const subscription = await this.listener.actionSubscription(
             ActionTraceFactory.getActionTrace(
                 ActionTraceKeys.ORDER_BOOK_CHANGES,
-                { blockNum, cursor }
+                {
+                    blockNum,
+                    cursor,
+                    irreversible,
+                }
             )
         );
 
