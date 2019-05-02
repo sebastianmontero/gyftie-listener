@@ -9,7 +9,7 @@ class ExchangeOrderInterpreter {
 
     interpret(data, includeMarketOps = false) {
 
-        const { actionData: { name: action, seq: actionSeq, dbOps, json: actionData }, blockTime: operationTime, blockNum, cursor } = data;
+        const { actionData: { name: action, seq: actionSeq, dbOps, json: actionData }, blockTime: operationTime, blockNum, cursor, undo } = data;
         /* console.log('action: ', action);
         console.log('dbOps: ', JSON.stringify(dbOps)); */
 
@@ -24,6 +24,7 @@ class ExchangeOrderInterpreter {
             operationTime,
             blockNum,
             cursor,
+            undo,
         };
 
         let pDBOps = this.processDBOps(BUY_TABLE, dbOps[BUY_TABLE], extraFields);
