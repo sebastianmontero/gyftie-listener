@@ -1,5 +1,5 @@
 const { EOSUtil, DBOps } = require('@smontero/eos-listener-gql');
-const { OrderTypes } = require('../const');
+const { OrderTypes, Tokens } = require('../const');
 const { TimeUtil } = require('../util');
 
 const BUY_TABLE = "gftorderbook/buyorders";
