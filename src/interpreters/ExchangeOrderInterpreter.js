@@ -67,7 +67,7 @@ class ExchangeOrderInterpreter {
                     remainingAmount = 0;
                     remainingOrderValue = 0;
                 } else {
-                    amount = orderValue / avgPrice;
+                    amount = avgPrice > 0 ? orderValue / avgPrice : 0;
                     remainingAmount = amount - totalAmount;
                     remainingOrderValue = orderValue - totalOrderValue;
                 }
