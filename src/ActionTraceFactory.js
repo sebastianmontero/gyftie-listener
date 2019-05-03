@@ -13,7 +13,7 @@ class ActionTraceFactory {
         switch (actionTraceKey) {
             case ActionTraceKeys.ORDER_BOOK_CHANGES:
                 return {
-                    query: "account:gftorderbook (db.table:buyorders OR db.table:sellorders)",
+                    query: "account:gftorderbook (action:marketsell OR action:marketbuy OR db.table:buyorders OR db.table:sellorders)",
                     dbOps: [{
                         account: "gftorderbook",
                         table: "buyorders",
