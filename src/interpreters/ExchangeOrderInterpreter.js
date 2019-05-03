@@ -47,7 +47,7 @@ class ExchangeOrderInterpreter {
 
             if (action == 'marketsell') {
                 ({ seller: account, gft_amount: amountAsset } = actionData);
-                ({ amount } = Util.parseAsset(amountAsset));
+                ({ amount } = EOSUtil.parseAsset(amountAsset));
                 orderType = OrderTypes.SELL;
                 if (totalAmount >= amount) {
                     orderValue = totalOrderValue;
@@ -60,7 +60,7 @@ class ExchangeOrderInterpreter {
                 }
             } else {
                 ({ buyer: account, eos_amount: orderValueAsset } = actionData);
-                ({ amount: orderValue } = Util.parseAsset(orderValueAsset));
+                ({ amount: orderValue } = EOSUtil.parseAsset(orderValueAsset));
                 orderType = OrderTypes.BUY;
                 if (totalOrderValue >= orderValue) {
                     amount = totalAmount;
