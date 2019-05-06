@@ -26,6 +26,21 @@ class ActionTraceFactory {
                     }],
                     serialized: true,
                 };
+            case ActionTraceKeys.TRADES:
+                return {
+                    query: "receiver:gftorderbook account:gftorderbook action:tradeexec",
+                    matchingActionsData: `
+                        seq
+                        receiver
+                        account
+                        name
+                        json
+                        creatorAction {
+                          name
+                        }
+                    `,
+                    serialized: true,
+                };
         }
         throw new Error(`ActionTraceKey: ${actionTraceKey} does not exist`);
     }

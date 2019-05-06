@@ -9,7 +9,18 @@ class ExchangeOrderInterpreter {
 
     interpret(data, includeMarketOps = false) {
 
-        const { actionData: { name: action, seq: actionSeq, dbOps, json: actionData }, blockTime: operationTime, blockNum, cursor, undo } = data;
+        const {
+            actionData: {
+                name: action,
+                seq: actionSeq,
+                dbOps,
+                json: actionData
+            },
+            blockTime: operationTime,
+            blockNum,
+            cursor,
+            undo
+        } = data;
         /* console.log('action: ', action);
         console.log('dbOps: ', JSON.stringify(dbOps)); */
 
