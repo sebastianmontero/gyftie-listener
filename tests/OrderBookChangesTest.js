@@ -3,7 +3,7 @@ const GyftieListener = require('../src/GyftieListener');
 
 describe('orderBookChanges', function () {
     const listener = new GyftieListener({
-        apiKey: "your-api-key",
+        apiKey: "your_api_key",
         network: "mainnet",
         endpoint: "mainnet.eos.dfuse.io",
     });

@@ -25,7 +25,7 @@ class ExchangeOrderInterpreter {
         console.log('dbOps: ', JSON.stringify(dbOps)); */
 
         let orders = [];
-
+        let operationSeq = 0;
         const operationTimeDate = new Date(operationTime);
 
         let extraFields = {
@@ -42,68 +42,76 @@ class ExchangeOrderInterpreter {
         pDBOps = pDBOps.concat(
             this.processDBOps(SELL_TABLE, dbOps[SELL_TABLE], extraFields)
         );
-        pDBOps = this.orderByType(pDBOps);
+        //pDBOps = this.orderByType(pDBOps);
 
         /* console.log('processedDBOps: ', JSON.stringify(pDBOps)); */
 
-        if (includeMarketOps && (action == 'marketsell' || action == 'marketbuy')) {
-            let {
-                totalAmount,
-                totalOrderValue,
-                avgPrice,
-            } = this.getMarketOpStats(pDBOps);
+        if (action == 'marketsell' || action == 'marketbuy') {
+            operationSeq++;
+            if (includeMarketOps) {
+                let {
+                    totalAmount,
+                    totalOrderValue,
+                    avgPrice,
+                } = this.getMarketOpStats(pDBOps);
 
-            let account, amount, amountAsset, orderValue, orderValueAsset, orderType,
-                remainingAmount, remainingOrderValue;
+                let account, amount, amountAsset, orderValue, orderValueAsset, orderType,
+                    remainingAmount, remainingOrderValue;
 
-            if (action == 'marketsell') {
-                ({ seller: account, gft_amount: amountAsset } = actionData);
-                ({ amount } = EOSUtil.parseAsset(amountAsset));
-                orderType = OrderTypes.SELL;
-                if (totalAmount >= amount) {
-                    orderValue = totalOrderValue;
-                    remainingAmount = 0;
-                    remainingOrderValue = 0;
+                if (action == 'marketsell') {
+                    ({ seller: account, gft_amount: amountAsset } = actionData);
+                    ({ amount } = EOSUtil.parseAsset(amountAsset));
+                    orderType = OrderTypes.SELL;
+                    if (totalAmount >= amount) {
+                        orderValue = totalOrderValue;
+                        remainingAmount = 0;
+                        remainingOrderValue = 0;
+                    } else {
+                        orderValue = amount * avgPrice;
+                        remainingAmount = amount - totalAmount;
+                        remainingOrderValue = orderValue - totalOrderValue;
+                    }
                 } else {
-                    orderValue = amount * avgPrice;
-                    remainingAmount = amount - totalAmount;
-                    remainingOrderValue = orderValue - totalOrderValue;
+                    ({ buyer: account, eos_amount: orderValueAsset } = actionData);
+                    ({ amount: orderValue } = EOSUtil.parseAsset(orderValueAsset));
+                    orderType = OrderTypes.BUY;
+                    if (totalOrderValue >= orderValue) {
+                        amount = totalAmount;
+                        remainingAmount = 0;
+                        remainingOrderValue = 0;
+                    } else {
+                        amount = avgPrice > 0 ? orderValue / avgPrice : 0;
+                        remainingAmount = amount - totalAmount;
+                        remainingOrderValue = orderValue - totalOrderValue;
+                    }
                 }
-            } else {
-                ({ buyer: account, eos_amount: orderValueAsset } = actionData);
-                ({ amount: orderValue } = EOSUtil.parseAsset(orderValueAsset));
-                orderType = OrderTypes.BUY;
-                if (totalOrderValue >= orderValue) {
-                    amount = totalAmount;
-                    remainingAmount = 0;
-                    remainingOrderValue = 0;
-                } else {
-                    amount = avgPrice > 0 ? orderValue / avgPrice : 0;
-                    remainingAmount = amount - totalAmount;
-                    remainingOrderValue = orderValue - totalOrderValue;
-                }
+                orders.push({
+                    orderId: operationTimeDate.getTime(),
+                    price: avgPrice,
+                    amount,
+                    oldAmount: null,
+                    operationToken: Tokens.GFT,
+                    counterpartToken: Tokens.EOS,
+                    orderValue,
+                    oldOrderValue: null,
+                    orderType,
+                    account,
+                    remainingAmount,
+                    remainingOrderValue,
+                    tableOperation: DBOps.INSERT,
+                    createdAt: TimeUtil.toUnixTimestamp(operationTimeDate),
+                    operationSeq,
+                    ...extraFields
+                });
             }
-            orders.push({
-                orderId: operationTimeDate.getTime(),
-                price: avgPrice,
-                amount,
-                oldAmount: null,
-                operationToken: Tokens.GFT,
-                counterpartToken: Tokens.EOS,
-                orderValue,
-                oldOrderValue: null,
-                orderType,
-                account,
-                remainingAmount,
-                remainingOrderValue,
-                tableOperation: DBOps.INSERT,
-                createdAt: TimeUtil.toUnixTimestamp(operationTimeDate),
-                ...extraFields
-            });
         }
 
         for (const pDBOp of pDBOps) {
-            orders.push(pDBOp);
+            operationSeq++;
+            orders.push({
+                ...pDBOp,
+                operationSeq,
+            });
         }
         return orders;
     }

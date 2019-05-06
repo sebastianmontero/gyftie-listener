@@ -6,6 +6,7 @@ class ExchangeTradeInterpreter {
     interpret(data) {
         const {
             actionData: {
+                seq: actionSeq,
                 json: {
                     buyer,
                     seller,
@@ -72,7 +73,8 @@ class ExchangeTradeInterpreter {
             tradeTime,
             blockNum,
             cursor,
-            undo
+            undo,
+            actionSeq,
         };
     }
 }
