@@ -1,5 +1,5 @@
 const GyftieListener = require('./src/GyftieListener');
-const { ActionTraceKeys, OrderTypes, TransferTypes } = require('./src/const');
+const { ActionTraceKeys, GyftieAccounts, OrderTypes, TransferTypes } = require('./src/const');
 const { GyftEventInterpreter, ExchangeOrderInterpreter, ExchangeTradeInterpreter } = require('./src/interpreters');
 const ActionTraceFactory = require('./src/ActionTraceFactory');
 
@@ -10,6 +10,7 @@ module.exports = {
     ExchangeTradeInterpreter,
     ActionTraceFactory,
     ActionTraceKeys,
+    GyftieAccounts,
     TransferTypes,
     GyftEventInterpreter,
 };

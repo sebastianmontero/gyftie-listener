@@ -1,6 +1,6 @@
 {
     "name": "@smontero/gyftie-listener",
-    "version": "1.0.14",
+    "version": "1.0.16",
     "description": "Package that simplifies the listening of gyftie contract related events",
     "main": "index.js",
     "scripts": {
