@@ -41,6 +41,36 @@ class ActionTraceFactory {
                     `,
                     serialized: true,
                 };
+            case ActionTraceKeys.GYFT_EVENTS:
+                return {
+                    query: "receiver:gyftietokens account:gyftietokens (action:gyft OR action:gyft2)",
+                    executedActionsData: `
+                        seq
+                        receiver
+                        account
+                        name
+                        json
+                        creatorAction {
+                            seq
+                            receiver
+                            account
+                            name
+                        }
+                    `,
+                    searches: {
+                        transfers: {
+                            listName: 'executedActions',
+                            search: {
+                                receiver: "gyftietokens",
+                                account: "gyftietokens",
+                                name: 'transfer',
+                                creatorAction: {
+                                    name: ['issue', 'issuetostake']
+                                }
+                            }
+                        }
+                    }
+                };
         }
         throw new Error(`ActionTraceKey: ${actionTraceKey} does not exist`);
     }

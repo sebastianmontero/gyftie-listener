@@ -3,7 +3,7 @@ const { map } = require('rxjs/operators');
 const { GQLEOSListener } = require('@smontero/eos-listener-gql');
 const ActionTraceFactory = require('./ActionTraceFactory');
 const { ActionTraceKeys } = require('./const');
-const { ExchangeOrderInterpreter, ExchangeTradeInterpreter } = require('./interpreters');
+const { GyftEventInterpreter, ExchangeOrderInterpreter, ExchangeTradeInterpreter } = require('./interpreters');
 
 class GyftieListener {
 
@@ -72,6 +72,28 @@ class GyftieListener {
         );
 
         return subscription.pipe(map(value => interpreter.interpret(value)));
+    }
+
+
+    async gyftEvents({
+        blockNum,
+        cursor,
+        irreversible = false,
+    }) {
+        const interpreter = new GyftEventInterpreter();
+
+        const subscription = await this.listener.actionSubscription(
+            ActionTraceFactory.getActionTrace(
+                ActionTraceKeys.GYFT_EVENTS,
+                {
+                    blockNum,
+                    cursor,
+                    irreversible,
+                }
+            )
+        );
+
+        return subscription.pipe(map(value => interpreter.interpret(value).gyft));
     }
 }
 
