@@ -3,7 +3,7 @@ const GyftieListener = require('../src/GyftieListener');
 
 describe('GyftEvents', function () {
     const listener = new GyftieListener({
-        apiKey: "server_d34dc9a715ac76a7a0293ee554067628",
+        apiKey: "your_api_key",
         network: "mainnet",
         endpoint: "mainnet.eos.dfuse.io",
     });
