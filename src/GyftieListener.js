@@ -95,6 +95,10 @@ class GyftieListener {
 
         return subscription.pipe(map(value => interpreter.interpret(value).gyft));
     }
+
+    async stop() {
+        return await this.listener.stop();
+    }
 }
 
 module.exports = GyftieListener;

@@ -1,6 +1,6 @@
 {
     "name": "@smontero/gyftie-listener",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "description": "Package that simplifies the listening of gyftie contract related events",
     "main": "index.js",
     "scripts": {
@@ -9,7 +9,7 @@
     "author": "Sebastian Montero",
     "license": "ISC",
     "dependencies": {
-        "@smontero/eos-listener-gql": "^1.0.11",
+        "@smontero/eos-listener-gql": "^1.0.12",
         "date-diff": "^0.2.1",
         "rxjs": "^6.5.1"
     },
